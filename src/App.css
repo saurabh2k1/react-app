@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+
+:root {
+  --color-toggle-light: #f6d447;
+  --color-toggle-dark: #2d0697;
+}
