@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MdSpaceDashboard, MdEmail,  MdMarkEmailUnread } from "react-icons/md";
-
+import { IoSettingsSharp } from "react-icons/io5";
 import { TfiDashboard } from "react-icons/tfi";
 
 import { FiLogOut } from "react-icons/fi";
@@ -30,7 +30,7 @@ const UserMenu = ({setMobileMenuOpen}:{setMobileMenuOpen?: any}) => {
             </li>
             <li>
                 <a href="/profile" className={linkClass}>
-                    <TfiDashboard className={iconeClass} />
+                    <IoSettingsSharp className={iconeClass} />
                     <span className="flex-1 ms-3 whitespace-nowrap">Profile</span>
                     <span className="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
                 </a>

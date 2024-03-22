@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "../utils/utils";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
+import { UserMinusIcon } from "@heroicons/react/24/outline";
 import { MdDashboard } from "react-icons/md";
 
 interface SidebarProps {
@@ -9,16 +10,24 @@ interface SidebarProps {
   setSidebarOpen: (arg: boolean) => void;
 }
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const Sidebar = () => {
+
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const location = useLocation();
+  
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
 
   const iconClass = "w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white";
-  const linkClass = "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group";
+  const linkClass = "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group";
   const storeSidebarExpanded = localStorage.getItem("sidebar-expanded");
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storeSidebarExpanded === null ? false : storeSidebarExpanded === "true"
   );
+
+  const isActive = (pathname: string) => {
+    return location.pathname === pathname;
+  }
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -29,7 +38,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         trigger.current.contains(target)
       )
         return;
-      setSidebarOpen(false);
+      // setSidebarOpen(false);
     };
     document.addEventListener("click", clickHandler);
     return () => document.removeEventListener("click", clickHandler);
@@ -38,7 +47,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
       if (!sidebarOpen || keyCode !== 27) return;
-      setSidebarOpen(false);
+      // setSidebarOpen(false);
     };
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
@@ -57,7 +66,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     <aside
       ref={sidebar}
       className={cn(
-        "absolute left-0 top-0 mt-[80px] z-9999 flex h-screen  flex-col overflow-y-hidden bg-gray-100 dark:bg-gray-800 duration-300 ease-linear lg:static lg:translate-x-0",
+        "absolute left-0 top-0 mt-[80px] z-9999 flex h-screen transition-transform -translate-x-full  flex-col overflow-y-hidden bg-gray-100 dark:bg-gray-800 duration-300 ease-linear lg:static lg:translate-x-0",
         {
           "translate-x-0 w-64": !!sidebarOpen,
           "-translate-x-full w-10 ": !sidebarOpen,
@@ -65,7 +74,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         }
       )}
     >
-      <div className="flex items-center justify-between gap-2 pt-5 pl-2 pr-6 py-5.5 lg:py-6.5">
+      <div className="flex items-center justify-between gap-2 pt-5 p-2 lg:py-6.5">
         { sidebarOpen && <h3 className="mb-4  text-sm font-semibold text-gray-900 dark:text-white">
           MENU
         </h3> }
@@ -78,21 +87,29 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         >
            { sidebarOpen? (
            
-            <GoSidebarExpand className="mb-4 ml-4 text-gray-900 dark:text-white " />) : (
-                <GoSidebarCollapse className="mb-4 ml-0 text-gray-900 dark:text-white "  />
+            <GoSidebarExpand className="w-5 h-5 mb-4 ml-4 text-gray-900 dark:text-white " />) : (
+                <GoSidebarCollapse className="w-5 h-5 mb-4 ml-0 text-gray-900 dark:text-white "  />
             ) }
         </button>
       </div>
       <div className="" >
         <ul className="space-y-2 font-medium">
             <li>
-            <a
-                href="/"
-                className={linkClass}
+            <NavLink
+                to="/"
+                className={ cn(linkClass, {'bg-gray-200 dark:bg-gray-700': isActive("/")})
+                  }
             >
                 <MdDashboard className={iconClass} />
-                <span className="ms-3">Dashboard</span>
-            </a>
+                { sidebarOpen && <span className="ms-3">Dashboard</span> }
+            </NavLink>
+            </li>
+            <li>
+              <NavLink to="/profile" className={cn(linkClass, {'bg-gray-200 dark:bg-gray-700': isActive('/profile')})
+                }>
+              <UserMinusIcon className={iconClass} />
+              { sidebarOpen && <span className="ms-3">Users</span> }
+              </NavLink>
             </li>
         </ul>
       </div>
