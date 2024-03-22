@@ -6,13 +6,25 @@ import DarkModeSwitcher from "./DarkModeSwitcher";
 import { Dialog } from "@headlessui/react";
 import { useAuth } from "../auth/AuthContext";
 import DropdownUser from "./DropdownUser";
+import { cn } from "../utils/utils";
 import { UserMinusIcon } from "@heroicons/react/24/outline";
+import { MdDashboard } from "react-icons/md";
+
 import UserMenu from "./core/UserMenu";
+import { NavLink, useLocation } from "react-router-dom";
+
 
 
 const AppNavBar: React.FC = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const {userName, isLoggedIn} = useAuth();
+    const iconClass = "w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white";
+    const linkClass = "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group";
+    const location = useLocation();
+    const isActive = (pathname: string) => {
+        return location.pathname === pathname;
+      }
+
     return (
         <header className="absolute inset-x-0 top-0 z-50 shadow bg-gray-50 dark:bg-gray-800 bg-opacity-50 backdrop-blur-lg backdrop-filter dark:border dark:border-gray-100/10 dark:bg-boxdark-2">
             <nav className='flex items-center justify-between p-6 lg:px-8 dark:text-gray-50' aria-label='Global'>
@@ -66,7 +78,25 @@ const AppNavBar: React.FC = () => {
                     <div className="mt-6 flow-root">
                         <div className="-my-6 divide-y divide-gray-500/10">
                             <div className="space-y-2 py-6">
-                                Menu
+                            <ul className="space-y-2 font-medium">
+                                <li>
+                                <NavLink
+                                    to="/"
+                                    className={ cn(linkClass, {'bg-gray-200 dark:bg-gray-700': isActive("/")})
+                                    }
+                                >
+                                    <MdDashboard className={iconClass} />
+                                    <span className="ms-3">Dashboard</span> 
+                                </NavLink>
+                                </li>
+                                <li>
+                                <NavLink to="/profile" className={cn(linkClass, {'bg-gray-200 dark:bg-gray-700': isActive('/profile')})
+                                    }>
+                                <UserMinusIcon className={iconClass} />
+                               <span className="ms-3">Users</span> 
+                                </NavLink>
+                                </li>
+                            </ul>
                             </div>
                             <div className="py-6">
                                 {!userName ? (
@@ -79,7 +109,7 @@ const AppNavBar: React.FC = () => {
                             )}
                             </div>
                             <div className="py-6">
-                                <DarkModeSwitcher />
+                                Dark Mode? <DarkModeSwitcher />
                             </div>
                         </div>
                     </div>

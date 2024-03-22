@@ -5,11 +5,6 @@ import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { UserMinusIcon } from "@heroicons/react/24/outline";
 import { MdDashboard } from "react-icons/md";
 
-interface SidebarProps {
-  sidebarOpen: boolean;
-  setSidebarOpen: (arg: boolean) => void;
-}
-
 const Sidebar = () => {
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -20,11 +15,7 @@ const Sidebar = () => {
 
   const iconClass = "w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white";
   const linkClass = "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group";
-  const storeSidebarExpanded = localStorage.getItem("sidebar-expanded");
-  const [sidebarExpanded, setSidebarExpanded] = useState(
-    storeSidebarExpanded === null ? false : storeSidebarExpanded === "true"
-  );
-
+  
   const isActive = (pathname: string) => {
     return location.pathname === pathname;
   }
@@ -53,20 +44,11 @@ const Sidebar = () => {
     return () => document.removeEventListener("keydown", keyHandler);
   });
 
-  useEffect(() => {
-    localStorage.setItem("sidebar-expanded", sidebarExpanded.toString());
-    if (sidebarExpanded) {
-      document.querySelector("body")?.classList.add("sidebar-expanded");
-    } else {
-      document.querySelector("body")?.classList.remove("sidebar-expanded");
-    }
-  }, [sidebarExpanded]);
-
   return (
     <aside
       ref={sidebar}
       className={cn(
-        "absolute left-0 top-0 mt-[80px] z-9999 flex h-screen transition-transform -translate-x-full  flex-col overflow-y-hidden bg-gray-100 dark:bg-gray-800 duration-300 ease-linear lg:static lg:translate-x-0",
+        "absolute left-0  top-0 mt-[80px] z-9999 flex h-screen transition-transform -translate-x-full  flex-col overflow-y-hidden bg-gray-100 dark:bg-gray-800 duration-300 ease-linear lg:static lg:translate-x-0",
         {
           "translate-x-0 w-64": !!sidebarOpen,
           "-translate-x-full w-10 ": !sidebarOpen,
