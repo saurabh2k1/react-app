@@ -4,21 +4,24 @@ import { NavLink, useLocation } from "react-router-dom";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 import { UserMinusIcon } from "@heroicons/react/24/outline";
 import { MdDashboard } from "react-icons/md";
+import { useAuth } from "../auth/AuthContext";
+import SidebarItem from "./SidebarItem";
 
 const Sidebar = () => {
-
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
-  
+
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
 
-  const iconClass = "w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white";
-  const linkClass = "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group";
-  
+  const iconClass =
+    "w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white";
+  const linkClass =
+    "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group";
+
   const isActive = (pathname: string) => {
     return location.pathname === pathname;
-  }
+  };
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -48,18 +51,19 @@ const Sidebar = () => {
     <aside
       ref={sidebar}
       className={cn(
-        "absolute left-0  top-0 mt-[80px] z-9999 flex h-screen transition-transform -translate-x-full  flex-col overflow-y-hidden bg-gray-100 dark:bg-gray-800 duration-300 ease-linear lg:static lg:translate-x-0",
+        "absolute left-0  top-0 mt-[50px] z-9999 flex h-[calc(100vh-50px)] transition-transform -translate-x-full  flex-col overflow-y-hidden bg-gray-100 dark:bg-gray-800 duration-300 ease-linear lg:static lg:translate-x-0",
         {
           "translate-x-0 w-64": !!sidebarOpen,
           "-translate-x-full w-10 ": !sidebarOpen,
-
         }
       )}
     >
       <div className="flex items-center justify-between gap-2 pt-5 p-2 lg:py-6.5">
-        { sidebarOpen && <h3 className="mb-4  text-sm font-semibold text-gray-900 dark:text-white">
-          MENU
-        </h3> }
+        {sidebarOpen && (
+          <h3 className="mb-4  text-sm font-semibold text-gray-900 dark:text-white">
+            MENU
+          </h3>
+        )}
         <button
           ref={trigger}
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -67,35 +71,16 @@ const Sidebar = () => {
           aria-expanded={sidebarOpen}
           className=" flex"
         >
-           { sidebarOpen? (
-           
-            <GoSidebarExpand className="w-5 h-5 mb-4 ml-4 text-gray-900 dark:text-white " />) : (
-                <GoSidebarCollapse className="w-5 h-5 mb-4 ml-0 text-gray-900 dark:text-white "  />
-            ) }
+          {sidebarOpen ? (
+            <GoSidebarExpand className="w-5 h-5 mb-4 ml-4 text-gray-900 dark:text-white " />
+          ) : (
+            <GoSidebarCollapse className="w-5 h-5 mb-4 ml-0 text-gray-900 dark:text-white " />
+          )}
         </button>
       </div>
-      <div className="" >
-        <ul className="space-y-2 font-medium">
-            <li>
-            <NavLink
-                to="/"
-                className={ cn(linkClass, {'bg-gray-200 dark:bg-gray-700': isActive("/")})
-                  }
-            >
-                <MdDashboard className={iconClass} />
-                { sidebarOpen && <span className="ms-3">Dashboard</span> }
-            </NavLink>
-            </li>
-            <li>
-              <NavLink to="/profile" className={cn(linkClass, {'bg-gray-200 dark:bg-gray-700': isActive('/profile')})
-                }>
-              <UserMinusIcon className={iconClass} />
-              { sidebarOpen && <span className="ms-3">Users</span> }
-              </NavLink>
-            </li>
-        </ul>
+      <div className="">
+        <SidebarItem sidebarOpen={sidebarOpen} />
       </div>
-     
     </aside>
   );
 };

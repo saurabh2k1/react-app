@@ -76,7 +76,7 @@ const Login: React.FC = () => {
           >
             Login
           </button>
-          <p>
+          <p className="text-sm font-light text-gray-500 dark:text-gray-400">
             Don't have an account yet? <a href="/signup" className="font-medium text-purple-600 hover:underline dark:text-purple-500">signup</a>
           </p>
         </form>

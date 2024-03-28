@@ -12,7 +12,7 @@ const authHeader = (isFile: boolean = false) => {
         }
         return headers;
     } else {
-        return { 'x-auth-token': null };
+        return { 'x-access-token': null };
     }
 }
 

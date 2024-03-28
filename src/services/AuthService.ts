@@ -5,8 +5,15 @@ interface LoginResponse {
   token: string;
 }
 
-    const apiUrl: string = `${process.env.REACT_APP_API_URL}/auth`;
-    
+const apiUrl: string = `${process.env.REACT_APP_API_URL}/auth`;
+
+
+
+
+
+
+
+
     async function loginService (email: string, password: string) : Promise<LoginResponse>   {
         try {
             const response = await axios.post<LoginResponse>(`${apiUrl}/login`, {email, password});
