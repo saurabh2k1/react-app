@@ -5,6 +5,8 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { User } from "../types";
+import { toast } from "react-toastify";
 
 interface AuthContextType {
   token: string | null;
@@ -12,7 +14,7 @@ interface AuthContextType {
   avatar: string | null;
   isLoggedIn: boolean;
   isLoading: boolean;
-  login: (token: string, userName: string, avatar: string) => void;
+  login: (user: User) => void;
   logout: () => void;
 }
 
@@ -29,27 +31,22 @@ export const AuthProvider: React.FC<{ children?: ReactNode }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
 
-  const login =  (token: string, userName: string, avatar: string|null) => {
+  const login =  (user: User) => {
     setIsLoading(true);
-    setToken(token);
-    setUserName(userName);
-    setAvatar(avatar);
+    setToken(user.token);
+    setUserName(user.name);
+    setAvatar(user.avatar || '');
     setIsLoggedIn(true);
-    localStorage.setItem('token', token);
-    localStorage.setItem('userName', userName);
-    localStorage.setItem('avatar', avatar || '');
     setIsLoading(false);
-    
   };
 
   useEffect(() => { 
-    const storedToken = localStorage.getItem('token');
-    const storedUserName = localStorage.getItem('userName');
-    const storedAvatar = localStorage.getItem('avatar');
-    if (storedToken && storedUserName) {
-      setToken(storedToken);
-      setUserName(storedUserName);
-      setAvatar(storedAvatar || null);
+    const storedUser = localStorage.getItem('user');
+    if (storedUser ) {
+      const user = JSON.parse(storedUser);
+      setToken(user.token);
+      setUserName(user.name);
+      setAvatar(user.avatar || null);
       setIsLoggedIn(true);
     }
    }, []);
@@ -81,10 +78,9 @@ export const AuthProvider: React.FC<{ children?: ReactNode }> = ({
     setToken(null);
     setUserName(null);
     setAvatar(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('avatar');
-    
+    setIsLoggedIn(false);
+    localStorage.removeItem('user');
+    toast.info("You have successfully logged out!");    
   };
 
  

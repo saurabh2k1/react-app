@@ -86,7 +86,7 @@ const Signup = () => {
                 I accept the{" "}
                 <a
                   className="font-medium text-purple-600 hover:underline dark:text-purple-500"
-                  href="#"
+                  href="/#"
                 >
                   Terms and Conditions
                 </a>

@@ -6,6 +6,9 @@ import FormExtra from "./core/FormExtra";
 import {loginService} from "../services/AuthService";
 import { jwtDecode } from "jwt-decode";
 import { redirect, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { BlockLike } from "typescript";
 
 interface LoginState {
   [key: string]: string;
@@ -23,22 +26,28 @@ interface MyJwtType {
 
 const Login: React.FC = () => {
   const {login} = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   
   const [loginState, setLoginState] = useState<LoginState>({});
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await loginService(loginState["email"], loginState["password"])
       if (response.token) {
-        const decode = jwtDecode<MyJwtType>(response.token);
-        login(response.token, decode.name, decode.avatar || '');
+        // const decode = jwtDecode<MyJwtType>(response.token);
+        login(response);
+        toast.success("Welcome back!");
         navigate("/profile");
       }
-    } catch (error) {
-      console.error("Error logging in:", error);
+    } catch (error:any) {
+      // console.error("Error logging in:", error);
+      if (error.response.data)
+      toast.error(error.response.data.error);
     }
+    setIsLoading(false);
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoginState({ ...loginState, [e.target.id]: e.target.value });
@@ -74,7 +83,7 @@ const Login: React.FC = () => {
             type="submit"
             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 mt-10"
           >
-            Login
+           {isLoading? "Loading ..." : "Login"} 
           </button>
           <p className="text-sm font-light text-gray-500 dark:text-gray-400">
             Don't have an account yet? <a href="/signup" className="font-medium text-purple-600 hover:underline dark:text-purple-500">signup</a>

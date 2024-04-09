@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { User } from "../types";
 import authHeader from "./AuthHeader";
+import api from './ApiService';
 
 export default class UserService {
   private apiUrl: string = `${process.env.REACT_APP_API_URL}/user`;
@@ -14,6 +15,19 @@ export default class UserService {
       });
       return response.data;
     } catch (error) {
+      return null;
+    }
+  }
+
+  async getAll(){
+    try {
+      const {data} = await api.get('/user', {headers: authHeader()});
+      // const {data} = await axios.get(`${this.apiUrl}`, {
+      //   headers: authHeader(),
+      // });
+      return data;
+    } catch (error) {
+      console.log(error);
       return null;
     }
   }

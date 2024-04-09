@@ -12,10 +12,14 @@ import ProfilePage from "./pages/ProfilePage";
 import { useAuth } from "./auth/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import useColorMode from "./utils/useColorMode";
+import UserList from "./components/UserList";
 
 function App() {
-  const { theme } = useTheme();
+  const [colorMode] = useColorMode();
   const {isLoggedIn} = useAuth();
+
+
 
   return (
     <div className="flex min-h-full h-screen bg-white dark:bg-gray-900">
@@ -27,8 +31,9 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/users" element={<UserList />} />
         </Routes>
-        <ToastContainer theme={theme} />
+        <ToastContainer theme={colorMode === 'dark' ? "dark" : "light"} />
       </div>
     </div>
   );

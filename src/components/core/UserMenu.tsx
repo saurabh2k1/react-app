@@ -5,16 +5,17 @@ import { TfiDashboard } from "react-icons/tfi";
 
 import { FiLogOut } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
 
 const UserMenu = ({setMobileMenuOpen}:{setMobileMenuOpen?: any}) => {
+
+    const {logout} = useAuth();
     
     const handleMobileMenuClick = () => {
         if (setMobileMenuOpen) setMobileMenuOpen(false);
     };
 
-    const logout = () => {
-        //
-    }
+    
 
     const linkClass = "flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group";
     const iconeClass = "flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white";

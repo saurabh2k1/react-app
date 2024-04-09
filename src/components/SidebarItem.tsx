@@ -33,7 +33,7 @@ const SidebarItem: React.FC<SidebarUtemProps> = ({sidebarOpen = true}) => {
             </NavLink>
             </li>
             <li>
-              <NavLink to="/profile" className={cn(linkClass, {'bg-gray-200 dark:bg-gray-700': isActive('/profile')})
+              <NavLink to="/users" className={cn(linkClass, {'bg-gray-200 dark:bg-gray-700': isActive('/users')})
                 }>
               <UserMinusIcon className={iconClass} />
               { sidebarOpen && <span className="ms-3">Users</span> }

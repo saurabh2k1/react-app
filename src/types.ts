@@ -2,9 +2,10 @@ export type Identifier = string | number;
 export interface User {
     id: number;
     name: string;
-   
     email: string;
-    dob: string;
+    token: string;
+    refreshToken: string;
+    dob?: string;
     avatar?: string;
     createdAt?: string;
     updatedAt?: string;

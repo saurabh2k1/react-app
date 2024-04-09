@@ -3,6 +3,10 @@ import { User, Token } from '../types';
 
 interface LoginResponse {
   token: string;
+  email: string;
+  id: number;
+  name: string;
+  refreshToken: string;
 }
 
 const apiUrl: string = `${process.env.REACT_APP_API_URL}/auth`;
@@ -14,9 +18,12 @@ const apiUrl: string = `${process.env.REACT_APP_API_URL}/auth`;
 
 
 
-    async function loginService (email: string, password: string) : Promise<LoginResponse>   {
+    async function loginService (email: string, password: string) : Promise<User>   {
         try {
-            const response = await axios.post<LoginResponse>(`${apiUrl}/login`, {email, password});
+            const response = await axios.post<User>(`${apiUrl}/login`, {email, password});
+            if (response.data.token) {
+              localStorage.setItem("user", JSON.stringify(response.data));
+            }
             return response.data;
         } catch (error) {
            throw error;
@@ -68,6 +75,6 @@ const apiUrl: string = `${process.env.REACT_APP_API_URL}/auth`;
         throw axiosError.response ? axiosError.response.data : axiosError.message;
       }
     }
-    export  {loginService, signupService};
+    export  {loginService, signupService,};
     
 // }

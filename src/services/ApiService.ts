@@ -21,8 +21,8 @@ instance.interceptors.response.use(
                         refreshToken: TokenService.getLocalRefreshToken(),
                     }, {headers: authHeader()});
 
-                    const { accessToken} = rs.data;
-                    TokenService.updateLocalAccessToken(accessToken);
+                    const { token} = rs.data;
+                    TokenService.updateLocalAccessToken(token);
                     return instance(originalConfig);
                 } catch (_error) {
                     return Promise.reject(_error);
