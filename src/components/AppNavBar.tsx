@@ -11,6 +11,7 @@ import DropdownUser from "./DropdownUser";
 import UserMenu from "./core/UserMenu";
 
 import SidebarItem from "./SidebarItem";
+import NotificationBadge from "./NotificationBadge";
 
 const AppNavBar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -48,6 +49,7 @@ const AppNavBar: React.FC = () => {
         <div className="hidden lg:flex lg:flex-1 gap-3 justify-end items-center">
           <ul className="flex justify-center items-center gap-2 sm:gap-4">
             <DarkModeSwitcher />
+            <NotificationBadge count={1} />
           </ul>
           {!userName ? (
             <a href="/login" className="text-sm font-semibold leading-6 ml-4">

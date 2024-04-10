@@ -3,7 +3,6 @@ import {
   IoSettings,
   IoSearch,
   IoAddCircle,
-  IoSaveOutline,
 } from "react-icons/io5";
 import { FaFilter } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
@@ -11,12 +10,13 @@ import { FaTableList } from "react-icons/fa6";
 import { IoFileTray } from "react-icons/io5";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { MdOutlinePageview, MdDelete } from "react-icons/md";
-import { TiCancel } from "react-icons/ti";
+
 import Checkbox from "./core/Checkbox";
 import UserService from "../services/UserService";
 import Pagination from "./Pagination";
-import Signup from "./Signup";
+
 import { toast } from "react-toastify";
+import AddUser from "./AddUser";
 
 const UserList: React.FC<any> = () => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -25,6 +25,7 @@ const UserList: React.FC<any> = () => {
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const [showNew, setShowNew] = useState<boolean>(false);
   const [showList, setShowList] = useState<boolean>(true);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
 
   let PageSize = 5;
@@ -56,16 +57,19 @@ const UserList: React.FC<any> = () => {
 
   const handleDiscard = () => {
     toast.warn("You have discarded the operation");
+    setUser(null);
     handleShowList();
   };
 
   const handleShowList = () => {
+    setShowPreview(false);
     setShowNew(false);
     setShowEdit(false);
     setShowList(true);
   };
 
   const handleShowNew = () => {
+    setShowPreview(false);
     setShowEdit(false);
     setShowList(false);
     setShowNew(true);
@@ -74,9 +78,19 @@ const UserList: React.FC<any> = () => {
   const handleShowEdit = (user: any) => {
     console.log("selected User:", user);
     setUser(user);
+    setShowPreview(false);
     setShowList(false);
     setShowNew(false);
     setShowEdit(true);
+  };
+
+  const handleShowPreview = (user: any) => {
+    console.log("selected User:", user);
+    setUser(user);
+    setShowList(false);
+    setShowNew(false);
+    setShowEdit(false);
+    setShowPreview(true);
   };
 
   useEffect(() => {
@@ -133,210 +147,48 @@ const UserList: React.FC<any> = () => {
                 Add User
               </button>
             )}
+            {showPreview && !showEdit && (
+              <button
+                type="button"
+                onClick={() => handleShowEdit(user)}
+                className="flex-shrink-0 inline-flex items-center justify-center py-2 px-3 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-violet-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              >
+                <LiaUserEditSolid className="mr-2 w-4 h-4" />
+                Edit User
+              </button>
+            )}
+            {!showPreview && showEdit && (
+              <button
+                type="button"
+                onClick={() => handleShowPreview(user)}
+                className="flex-shrink-0 inline-flex items-center justify-center py-2 px-3 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-violet-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              >
+                <MdOutlinePageview className="mr-2 w-4 h-4" />
+                Preview User
+              </button>
+            )}
           </div>
         </div>
 
         {showNew && (
-          <div className="flex items-center space-x-3 w-full">
-            <div className="relative p-4 w-full max-w-exl h-full md:h-auto">
-              <div className="relative p-4 bg-gray-100 rounded-lg shadow dark:bg-gray-700 ms:p-5">
-                <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                  <h3 className="text-lg font0semibold text-gray-900 dark:text-white">
-                    Add User
-                  </h3>
-                </div>
-                {/* body */}
-                <form action="">
-                  <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500"
-                        required
-                        placeholder="Enter user name"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500"
-                        required
-                        placeholder="Enter email address"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="password"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Password
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500"
-                        required
-                        placeholder="Enter user password"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="dob"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Date of Birth
-                      </label>
-                      <input
-                        type="date"
-                        name="dob"
-                        id="dob"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="flex-shrink-0 flex flex-col items-start md:flex-row md:items-center lg:justify-end space-y-3 md:space-y-0 md:space-x-3 ">
-                    <button
-                      type="submit"
-                      className="text-white inline-flex items-center bg-violet-700 hover:bg-violet-800 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-violet-600 dark:hover:bg-violet-700 dark:focus:ring-violet-800"
-                    >
-                      <IoSaveOutline className="mr-1 -ml-1 w-6 h-6" />
-                      Add new user
-                    </button>
-                    <button
-                      type="reset"
-                      onClick={handleDiscard}
-                      className="flex-shrink-0 inline-flex items-center justify-center py-2 px-3 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-violet-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                    >
-                      <TiCancel className="mr-1 -ml-1 w-6 h-6" />
-                      Discard
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+          <AddUser onSave={handleDiscard} onDiscard={handleDiscard} />
         )}
 
-        {showEdit && 
-        <div className="flex items-center space-x-3 w-full">
-            <div className="relative p-4 w-full max-w-exl h-full md:h-auto">
-              <div className="relative p-4 bg-gray-100 rounded-lg shadow dark:bg-gray-700 ms:p-5">
-                <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                  <h3 className="text-lg font0semibold text-gray-900 dark:text-white">
-                    Edit User : {user?.name}
-                  </h3>
-                </div>
-                {/* body */}
-                <form action="">
-                  <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        defaultValue={user.name}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500"
-                        required
-                        placeholder="Enter user name"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        defaultValue={user.email}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500"
-                        required
-                        placeholder="Enter email address"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="password"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Password
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        id="password"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500"
-                        required
-                        placeholder="Enter user password"
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="dob"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      >
-                        Date of Birth
-                      </label>
-                      <input
-                        type="date"
-                        name="dob"
-                        id="dob"
-                        
-                        defaultValue={user.dob}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-violet-600 focus:border-violet-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="flex-shrink-0 flex flex-col items-start md:flex-row md:items-center lg:justify-end space-y-3 md:space-y-0 md:space-x-3 ">
-                    <button
-                      type="submit"
-                      className="text-white inline-flex items-center bg-violet-700 hover:bg-violet-800 focus:ring-4 focus:outline-none focus:ring-violet-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-violet-600 dark:hover:bg-violet-700 dark:focus:ring-violet-800"
-                    >
-                      <IoSaveOutline className="mr-1 -ml-1 w-6 h-6" />
-                      Update user
-                    </button>
-                    <button
-                      type="reset"
-                      onClick={handleDiscard}
-                      className="flex-shrink-0 inline-flex items-center justify-center py-2 px-3 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-violet-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                    >
-                      <TiCancel className="mr-1 -ml-1 w-6 h-6" />
-                      Discard
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        }
+        {showEdit && (
+          <AddUser
+            user={user}
+            onSave={handleDiscard}
+            onDiscard={handleDiscard}
+          />
+        )}
+        {showPreview && (
+          <AddUser
+            user={user}
+            onSave={handleDiscard}
+            onDiscard={handleDiscard}
+            readOnly={true}
+          />
+        )}
 
         {showList && (
           <div>
@@ -473,6 +325,7 @@ const UserList: React.FC<any> = () => {
                               </button>
                               <button
                                 type="button"
+                                onClick={() => handleShowPreview(user)}
                                 className="py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-violet-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                               >
                                 <MdOutlinePageview className="h-4 w-4 mr-2 -ml-0.5" />
